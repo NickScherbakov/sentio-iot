@@ -1,0 +1,188 @@
+version: '3.8'
+
+services:
+  # Time-series database for metrics
+  victoriametrics:
+    image: victoriametrics/victoria-metrics:latest
+    container_name: sentio-victoriametrics
+    ports:
+      - "8428:8428"
+    volumes:
+      - ./data/victoriametrics:/victoria-metrics-data
+    command:
+      - "--storageDataPath=/victoria-metrics-data"
+      - "--retentionPeriod=12"
+    restart: unless-stopped
+    networks:
+      - sentio-network
+
+  # Log storage
+  loki:
+    image: grafana/loki:latest
+    container_name: sentio-loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./config/loki-config.yml:/etc/loki/local-config.yaml
+      - ./data/loki:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+    networks:
+      - sentio-network
+
+  # Trace storage
+  tempo:
+    image: grafana/tempo:latest
+    container_name: sentio-tempo
+    ports:
+      - "3200:3200"
+      - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
+    volumes:
+      - ./config/tempo-config.yml:/etc/tempo/tempo.yaml
+      - ./data/tempo:/tmp/tempo
+    command: -config.file=/etc/tempo/tempo.yaml
+    restart: unless-stopped
+    networks:
+      - sentio-network
+
+  # API Server
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: sentio-api
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgresql://sentio:sentio@postgres:5432/sentio
+      - VICTORIAMETRICS_URL=http://victoriametrics:8428
+      - LOKI_URL=http://loki:3100
+      - TEMPO_URL=http://tempo:3200
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-me-in-production}
+    volumes:
+      - ./config:/app/config
+    depends_on:
+      - postgres
+      - redis
+      - victoriametrics
+      - loki
+      - tempo
+    restart: unless-stopped
+    networks:
+      - sentio-network
+
+  # Collectors service
+  collectors:
+    build:
+      context: ./collectors
+      dockerfile: Dockerfile
+    container_name: sentio-collectors
+    environment:
+      - VICTORIAMETRICS_URL=http://victoriametrics:8428
+      - LOKI_URL=http://loki:3100
+      - TEMPO_URL=http://tempo:3200
+    volumes:
+      - ./config:/app/config
+    depends_on:
+      - victoriametrics
+      - loki
+      - tempo
+    restart: unless-stopped
+    networks:
+      - sentio-network
+
+  # AI Engine
+  ai-engine:
+    build:
+      context: ./ai-engine
+      dockerfile: Dockerfile
+    container_name: sentio-ai-engine
+    environment:
+      - VICTORIAMETRICS_URL=http://victoriametrics:8428
+      - REDIS_URL=redis://redis:6379
+      - MODEL_PATH=/app/models
+    volumes:
+      - ./models:/app/models
+      - ./config:/app/config
+    depends_on:
+      - redis
+      - victoriametrics
+    restart: unless-stopped
+    networks:
+      - sentio-network
+
+  # Protocol Connectors
+  connectors:
+    build:
+      context: ./connectors
+      dockerfile: Dockerfile
+    container_name: sentio-connectors
+    environment:
+      - COLLECTORS_URL=http://collectors:8081
+    volumes:
+      - ./config:/app/config
+    depends_on:
+      - collectors
+    restart: unless-stopped
+    networks:
+      - sentio-network
+    # Privileged mode may be needed for some industrial protocols
+    # privileged: true
+
+  # Dashboard
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: sentio-dashboard
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8080
+      - REACT_APP_WS_URL=ws://localhost:8080
+    depends_on:
+      - api
+    restart: unless-stopped
+    networks:
+      - sentio-network
+
+  # PostgreSQL for metadata
+  postgres:
+    image: postgres:15-alpine
+    container_name: sentio-postgres
+    environment:
+      - POSTGRES_DB=sentio
+      - POSTGRES_USER=sentio
+      - POSTGRES_PASSWORD=sentio
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - sentio-network
+
+  # Redis for caching and message queue
+  redis:
+    image: redis:7-alpine
+    container_name: sentio-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    restart: unless-stopped
+    networks:
+      - sentio-network
+
+networks:
+  sentio-network:
+    driver: bridge
+
+volumes:
+  victoriametrics-data:
+  loki-data:
+  tempo-data:
+  postgres-data:
+  redis-data:
