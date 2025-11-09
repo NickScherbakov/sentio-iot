@@ -1,0 +1,12 @@
+# Data Directory
+
+This directory is used for persistent storage of data.
+
+The following subdirectories are created automatically:
+- `victoriametrics/` - Time-series metrics data
+- `loki/` - Log data
+- `tempo/` - Trace data
+- `postgres/` - Database files
+- `redis/` - Cache data
+
+These directories are excluded from git via .gitignore.

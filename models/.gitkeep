@@ -1,0 +1,9 @@
+# Models Directory
+
+This directory stores trained machine learning models for the AI engine.
+
+Models include:
+- `anomaly_detector.pkl` - Isolation Forest model for anomaly detection
+- `predictive_maintenance.pkl` - Predictive maintenance model
+
+Models are automatically saved here after training.
