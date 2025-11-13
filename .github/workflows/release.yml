@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate changelog
+        id: changelog
+        uses: metcalfc/changelog-generator@v4.3.1
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: |
+            ## What's Changed
+            
+            ${{ steps.changelog.outputs.changelog }}
+            
+            ## Docker Images
+            
+            Pull the latest images:
+            ```bash
+            docker pull ghcr.io/${{ github.repository_owner }}/sentio-iot-api:${{ github.ref_name }}
+            docker pull ghcr.io/${{ github.repository_owner }}/sentio-iot-collectors:${{ github.ref_name }}
+            docker pull ghcr.io/${{ github.repository_owner }}/sentio-iot-connectors:${{ github.ref_name }}
+            docker pull ghcr.io/${{ github.repository_owner }}/sentio-iot-ai-engine:${{ github.ref_name }}
+            docker pull ghcr.io/${{ github.repository_owner }}/sentio-iot-dashboard:${{ github.ref_name }}
+            ```
+            
+            ## Installation
+            
+            ```bash
+            git clone -b ${{ github.ref_name }} https://github.com/${{ github.repository }}.git
+            cd sentio-iot
+            docker-compose up -d
+            ```
+            
+            ## Full Changelog
+            
+            **Full Changelog**: https://github.com/${{ github.repository }}/compare/${{ steps.changelog.outputs.fromTag }}...${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-docs:
+    name: Publish Documentation
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          cname: sentio-iot.dev
+        continue-on-error: true
