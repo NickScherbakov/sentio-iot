@@ -36,9 +36,40 @@ async def lifespan(app: FastAPI):
 # Initialize FastAPI app
 app = FastAPI(
     title="Sentio IoT API",
-    description="Distributed Observability Platform for IoT and Edge Devices",
+    description="""
+    ## Distributed Observability Platform for IoT and Edge Devices
+    
+    Sentio IoT provides a comprehensive API for monitoring and managing IoT devices at scale.
+    
+    ### Features
+    * 📊 **Metrics**: Query time-series metrics using PromQL
+    * 📝 **Logs**: Search and analyze logs with LogQL
+    * 🔍 **Traces**: Distributed tracing for device communications
+    * 🤖 **AI Analytics**: Anomaly detection and predictive maintenance
+    * 🔌 **Device Management**: Configure and monitor connected devices
+    * ⚡ **Real-time**: WebSocket support for live updates
+    
+    ### Authentication
+    Most endpoints require JWT authentication. Use `/auth/login` to obtain a token.
+    
+    ### Rate Limiting
+    API requests are rate-limited to prevent abuse. Contact support for increased limits.
+    """,
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json",
+    contact={
+        "name": "Sentio IoT Team",
+        "url": "https://github.com/NickScherbakov/sentio-iot",
+        "email": "support@example.com",
+    },
+    license_info={
+        "name": "MIT License",
+        "url": "https://opensource.org/licenses/MIT",
+    },
+    terms_of_service="https://github.com/NickScherbakov/sentio-iot/blob/main/LICENSE",
 )
 
 # CORS middleware
