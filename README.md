@@ -99,9 +99,13 @@ Comprehensive documentation to help you get started:
 | 📘 [Getting Started](docs/README.md) | Complete overview and introduction |
 | 🔧 [Installation](docs/installation.md) | Detailed installation instructions |
 | ⚙️ [Configuration](docs/configuration.md) | Configuration reference and examples |
+| 📋 [Examples](docs/examples.md) | Ready-to-use configuration examples |
 | 🚀 [Deployment](docs/deployment.md) | Production deployment guide |
 | 📚 [API Reference](docs/api.md) | REST API and WebSocket documentation |
 | 🏗️ [Architecture](docs/architecture.md) | Technical architecture deep dive |
+| ❓ [FAQ](docs/FAQ.md) | Frequently asked questions |
+| 🔧 [Troubleshooting](docs/troubleshooting.md) | Common issues and solutions |
+| 🆚 [Comparison](docs/comparison.md) | Compare with alternatives |
 
 ## 🛠️ Technology Stack
 
