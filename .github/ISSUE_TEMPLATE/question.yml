@@ -1,0 +1,51 @@
+name: Question
+description: Ask a question about Sentio IoT
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have a question? We're here to help! Please check our [documentation](https://github.com/NickScherbakov/sentio-iot/tree/main/docs) first.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: How do I...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: topic
+    attributes:
+      label: Topic
+      description: What is your question about?
+      options:
+        - Installation & Setup
+        - Configuration
+        - Usage & Features
+        - Deployment
+        - API & Integration
+        - Troubleshooting
+        - Best Practices
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide any relevant context or what you've already tried
+      placeholder: I'm trying to... and I've already...
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment (if relevant)
+      value: |
+        - OS: [e.g. Ubuntu 22.04]
+        - Docker version: [e.g. 24.0.5]
+        - Sentio IoT version: [e.g. latest, v1.0.0]

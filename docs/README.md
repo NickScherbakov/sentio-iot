@@ -2,6 +2,29 @@
 
 **Sentio IoT** is an open-source, distributed observability platform designed specifically for IoT and edge devices. It provides scalable collection, analysis, and visualization of metrics, logs, and traces with AI-powered alerting, predictive fault detection, and ready-made connectors for popular IoT protocols.
 
+## 📚 Documentation Index
+
+### Getting Started
+- **[Installation Guide](installation.md)** - Step-by-step installation instructions
+- **[Quick Start](../README.md#-quick-start)** - Get running in 5 minutes
+- **[Configuration Guide](configuration.md)** - Configure connectors and services
+- **[Example Configurations](examples.md)** - Ready-to-use configuration examples
+
+### Understanding Sentio IoT
+- **[Architecture Overview](architecture.md)** - Technical architecture and design
+- **[Comparison Guide](comparison.md)** - Compare with alternatives (Grafana, Prometheus, etc.)
+- **[API Reference](api.md)** - REST API and WebSocket documentation
+
+### Deployment
+- **[Deployment Guide](deployment.md)** - Production deployment scenarios
+- **[Docker Compose](../docker-compose.yml)** - Container orchestration
+- **[Security Best Practices](../SECURITY.md)** - Secure your deployment
+
+### Contributing
+- **[Contributing Guide](../CONTRIBUTING.md)** - How to contribute
+- **[Roadmap](../ROADMAP.md)** - Future features and plans
+- **[Code of Conduct](../CODE_OF_CONDUCT.md)** - Community guidelines
+
 ## 🚀 Features
 
 ### Core Capabilities
