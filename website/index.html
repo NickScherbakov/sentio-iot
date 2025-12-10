@@ -327,7 +327,7 @@
                         <i class="fab fa-github text-xl"></i>
                         <span>View on GitHub</span>
                     </a>
-                    <a href="https://github.com/NickScherbakov/sentio-iot#-quick-start" 
+                    <a href="https://github.com/NickScherbakov/sentio-iot#quick-start" 
                        target="_blank"
                        class="inline-flex items-center space-x-3 px-8 py-4 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all">
                         <i class="fas fa-book"></i>
@@ -380,7 +380,7 @@
                 </div>
                 
                 <p class="text-gray-400">
-                    &copy; 2024 Sentio IoT. Licensed under <a href="https://github.com/NickScherbakov/sentio-iot/blob/main/LICENSE" class="text-blue-400 hover:text-blue-300" target="_blank">MIT License</a>
+                    &copy; <span id="copyright-year"></span> Sentio IoT. Licensed under <a href="https://github.com/NickScherbakov/sentio-iot/blob/main/LICENSE" class="text-blue-400 hover:text-blue-300" target="_blank">MIT License</a>
                 </p>
             </div>
             
@@ -389,6 +389,11 @@
             </div>
         </div>
     </footer>
+    
+    <script>
+        // Set copyright year dynamically
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    </script>
     
 </body>
 </html>
