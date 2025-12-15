@@ -4,7 +4,7 @@
   "description": "Sentio IoT Dashboard - Real-time observability for IoT devices",
   "private": true,
   "dependencies": {
-    "react": "^18.2.0",
+    "react": "^19.2.3",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
     "axios": "^1.12.0",
