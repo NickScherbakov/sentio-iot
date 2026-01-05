@@ -1,5 +1,5 @@
 pymodbus==3.5.4
-zigpy==0.60.2
+zigpy==0.90.0
 zigpy-znp==0.12.1
 requests==2.31.0
 pyyaml==6.0.1
